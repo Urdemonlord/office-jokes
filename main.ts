@@ -8,17 +8,24 @@ const joke =
 // Self-check against the competition gate before writing: the entry must
 // be one non-empty line of 1-200 code points. Fail loudly instead of
 // writing an invalid entry.
-const codePoints = [...joke].length;
-if (joke.trim().length === 0) {
-  throw new Error("joke must not be empty or whitespace-only");
-}
-if (joke.includes("\n") || joke.includes("\r")) {
-  throw new Error("joke must be a single line");
-}
-if (codePoints < 1 || codePoints > 200) {
-  throw new Error(`joke must be 1-200 code points, got ${codePoints}`);
+function validateJoke(text: string): void {
+  const codePoints = [...text].length;
+  if (text.trim().length === 0) {
+    throw new Error("joke must not be empty or whitespace-only");
+  }
+  if (text.includes("\n") || text.includes("\r")) {
+    throw new Error("joke must be a single line");
+  }
+  if (codePoints < 1 || codePoints > 200) {
+    throw new Error(`joke must be 1-200 code points, got ${codePoints}`);
+  }
 }
 
+function writeEntry(text: string, outDir: string): void {
+  fs.mkdirSync(outDir, { recursive: true });
+  fs.writeFileSync(path.join(outDir, "entry.txt"), text, "utf8");
+}
+
+validateJoke(joke);
 const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? "/output";
-fs.mkdirSync(outDir, { recursive: true });
-fs.writeFileSync(path.join(outDir, "entry.txt"), joke, "utf8");
+writeEntry(joke, outDir);
